@@ -1,0 +1,20 @@
+# Dart/Pub
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+doc/api/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+
+# Generated demo projects (created by running `srik create` in this repo)
+/my_app/
+/demo_*/
+/test_*/

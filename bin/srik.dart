@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:srik_cli/commands/add_command.dart';
 import 'package:srik_cli/commands/create_command.dart';
 import 'package:srik_cli/commands/doctor_command.dart';
 import 'package:srik_cli/utils/logger.dart';
 
-const String version = '0.1.0';
+const String version = '0.2.0';
 
 Future<void> main(List<String> arguments) async {
   final runner = CommandRunner<int>(
@@ -20,6 +21,7 @@ Future<void> main(List<String> arguments) async {
       help: 'Print the current version.',
     )
     ..addCommand(CreateCommand())
+    ..addCommand(AddCommand())
     ..addCommand(DoctorCommand());
 
   try {

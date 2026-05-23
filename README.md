@@ -1,23 +1,12 @@
 # srik_cli
 
-> Flutter project scaffolder. Generates production-ready Clean Architecture + Riverpod projects with one command.
+> Flutter project scaffolder. Choose your architecture, design preset, gradients, and spacing — generate a runnable app in seconds.
 
 [![pub package](https://img.shields.io/pub/v/srik_cli.svg)](https://pub.dev/packages/srik_cli)
 
 ## What it does
 
-Stop rebuilding the same folder structure for every new Flutter app. `srik` generates:
-
-- **Clean Architecture** folder layout (domain → data → presentation)
-- **Riverpod** state management wired up
-- **go_router** routing configured
-- **Dio** networking with logging interceptor
-- **shared_preferences** local storage wrapper
-- **Design tokens** (colors, spacing, typography, theme) from your brand color
-- **dartz** for functional error handling (`Either<Failure, Result>`)
-- One working example feature (`home`) showing the full data flow
-
-Run one command, get a runnable app.
+Stop rebuilding the same folder structure for every new Flutter app. `srik` generates a fully wired project with the architecture and design system you choose.
 
 ## Install
 
@@ -35,72 +24,93 @@ cd my_app
 flutter run
 ```
 
-### With options
+The interactive prompt lets you pick everything:
+
+```
+? Description           A new Flutter app
+? Organization          com.example
+? Architecture          Clean Architecture / MVVM / Feature-first / Simple
+? Design preset         Material / Vibrant / Minimal
+? Add gradient theme?   y/N
+? Spacing scale         Compact / Normal / Spacious
+? Brand color (hex)     #6200EE
+```
+
+### Non-interactive
 
 ```bash
 srik create my_app \
-  --org=com.acme \
+  --arch=mvvm \
+  --design=vibrant \
+  --gradient \
+  --spacing=spacious \
   --brand=#FF5733 \
-  --description="A fitness tracker"
+  --org=com.acme \
+  --no-interactive
 ```
 
-### Non-interactive (for CI)
+## Architectures
 
-```bash
-srik create my_app --no-interactive --org=com.acme --brand=#6200EE
-```
+| Architecture | Structure |
+|---|---|
+| **Clean** | `core/` + `features/<name>/{data,domain,presentation}` |
+| **MVVM** | `models/`, `views/`, `viewmodels/`, `services/` |
+| **Feature-first** | `shared/` + `features/<name>/` (flat per feature) |
+| **Simple** | `screens/`, `widgets/`, `models/`, `services/` |
 
-## What gets generated
+All architectures come wired with Riverpod, go_router, and Dio.
 
-```
-my_app/
-├── lib/
-│   ├── core/
-│   │   ├── constants/       # design tokens
-│   │   ├── error/           # exceptions & failures
-│   │   ├── network/         # Dio client provider
-│   │   ├── router/          # go_router config
-│   │   └── storage/         # shared_preferences wrapper
-│   ├── features/
-│   │   └── home/
-│   │       ├── data/        # repository impls
-│   │       ├── domain/      # entities, repo interfaces
-│   │       └── presentation/# screens, providers
-│   ├── app.dart
-│   └── main.dart
-├── srik.yaml                # CLI config for future commands
-├── analysis_options.yaml
-├── pubspec.yaml
-└── README.md
-```
+## Design presets
+
+| Preset | Look |
+|---|---|
+| **Material** | Google's Material 3 defaults |
+| **Vibrant** | Saturated, modern startup style |
+| **Minimal** | Low contrast, neutral, sharp corners |
+
+Every preset generates design tokens (`app_colors`, `app_spacing`, `app_text_styles`, `app_radius`, `app_durations`, `app_theme`) from your brand color. Add `--gradient` for an `app_gradients` file with brand-derived gradients.
+
+Spacing scale (`compact` / `normal` / `spacious`) controls the density of the spacing tokens.
 
 ## Commands
 
 ```bash
-srik create <name>    # Create new project
-srik doctor           # Check your environment
-srik --version        # Print version
+srik create <name>                # Create new project
+srik add feature <name>           # Add a feature module (Clean projects)
+srik add screen <name> -f <feat>  # Add a screen to a feature (Clean projects)
+srik doctor                       # Check your environment
+srik --version                    # Print version
 ```
+
+### Adding features
+
+For Clean Architecture projects, keep scaffolding after creation:
+
+```bash
+cd my_app
+srik add feature profile
+srik add screen edit_profile --feature profile
+```
+
+Each `add feature` generates the full layered structure and updates `srik.yaml`.
 
 ## Roadmap
 
-`v0.1.0` ships Clean Architecture + Riverpod. Coming next:
+`v0.3.0` ships architecture choice + design customization. Coming next:
 
-- **v0.2** — MVVM and Feature-first architectures
-- **v0.3** — Bloc, Provider, GetX state management options
-- **v0.4** — Firebase integration (Auth, Firestore, FCM)
-- **v0.5** — `srik add feature` and `srik add screen` commands
-- **v0.6** — Multiple design system presets (Vibrant, iOS, Minimal)
+- **v0.4** — `add feature` support for MVVM, Feature-first, Simple
+- **v0.5** — Firebase integration (Auth, Firestore, FCM)
+- **v0.6** — Bloc, Provider, GetX state management options
 
 ## Why not very_good_cli or mason?
 
 - **`very_good_cli`** forces Bloc + their opinionated structure
-- **`mason`** is a generic template engine — you write all the bricks yourself
-- **`srik_cli`** ships ready-made templates that boot a working app immediately
+- **`mason`** is a generic template engine — you write all bricks yourself
+- **`srik_cli`** ships ready-made, architecture-aware templates that boot a working app immediately
 
 ## License
 
-MIT — see [LICENSE](LICENSE) file.
+MIT — see [LICENSE](LICENSE).
 
 ## Contributing
 

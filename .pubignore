@@ -1,0 +1,5 @@
+# Don't ship demo projects or maintainer-only docs in the published package.
+/my_app/
+/demo_*/
+/test_*/
+PUBLISH.md

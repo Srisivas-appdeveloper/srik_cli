@@ -48,7 +48,10 @@ class DoctorCommand extends Command<int> {
     }
     try {
       final result = await Process.run(executable, args);
-      final firstLine = result.stdout.toString().split('\n').first.trim();
+      final out = (result.stdout is String ? result.stdout as String : '');
+      final lines = out.split('\n').where((l) => l.trim().isNotEmpty);
+      final firstLine =
+          lines.isEmpty ? '(version output empty)' : lines.first.trim();
       Logger.success('$executable: $firstLine');
       return true;
     } catch (e) {

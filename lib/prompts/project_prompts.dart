@@ -1,31 +1,25 @@
 import 'dart:io';
 
 import 'package:interact/interact.dart';
+import 'package:srik_cli/models/enums.dart';
 import 'package:srik_cli/models/project_config.dart';
 import 'package:srik_cli/prompts/validators.dart';
 
 class ProjectPrompts {
-  /// Collects config interactively. Uses provided values when given.
+  /// Collects full project configuration. Uses provided values where given,
+  /// prompts interactively for the rest.
   static ProjectConfig collect({
-    String? providedName,
+    required String projectName,
     String? providedDescription,
     String? providedOrg,
     String? providedBrand,
+    String? providedArch,
+    String? providedDesign,
+    bool? providedGradient,
+    String? providedSpacing,
     required String outputDirectory,
     bool interactive = true,
   }) {
-    final name = providedName ??
-        (interactive
-            ? Input(
-                prompt: 'Project name',
-                validator: (v) {
-                  final err = Validators.projectName(v);
-                  if (err != null) throw ValidationError(err);
-                  return true;
-                },
-              ).interact()
-            : (throw ArgumentError('Project name is required.')));
-
     final description = providedDescription ??
         (interactive
             ? Input(
@@ -47,6 +41,61 @@ class ProjectPrompts {
               ).interact()
             : 'com.example');
 
+    // Architecture
+    final AppArchitecture architecture;
+    if (providedArch != null) {
+      architecture = AppArchitecture.parse(providedArch);
+    } else if (interactive) {
+      final options = AppArchitecture.values;
+      final index = Select(
+        prompt: 'Architecture',
+        options: options.map((a) => a.label).toList(),
+      ).interact();
+      architecture = options[index];
+    } else {
+      architecture = AppArchitecture.clean;
+    }
+
+    // Design preset
+    final DesignPreset designPreset;
+    if (providedDesign != null) {
+      designPreset = DesignPreset.parse(providedDesign);
+    } else if (interactive) {
+      final options = DesignPreset.values;
+      final index = Select(
+        prompt: 'Design preset',
+        options: options.map((d) => d.label).toList(),
+      ).interact();
+      designPreset = options[index];
+    } else {
+      designPreset = DesignPreset.material;
+    }
+
+    // Gradient
+    final useGradient = providedGradient ??
+        (interactive
+            ? Confirm(
+                prompt: 'Add gradient theme support?',
+                defaultValue: false,
+              ).interact()
+            : false);
+
+    // Spacing scale
+    final SpacingScale spacingScale;
+    if (providedSpacing != null) {
+      spacingScale = SpacingScale.parse(providedSpacing);
+    } else if (interactive) {
+      final options = SpacingScale.values;
+      final index = Select(
+        prompt: 'Spacing scale',
+        options: options.map((s) => s.label).toList(),
+      ).interact();
+      spacingScale = options[index];
+    } else {
+      spacingScale = SpacingScale.normal;
+    }
+
+    // Brand color
     final brand = providedBrand ??
         (interactive
             ? Input(
@@ -61,15 +110,18 @@ class ProjectPrompts {
             : '#6200EE');
 
     return ProjectConfig(
-      projectName: name.trim(),
+      projectName: projectName.trim(),
       description: description.trim(),
       organization: org.trim(),
-      brandColor: brand.trim(),
       outputDirectory: outputDirectory,
+      architecture: architecture,
+      designPreset: designPreset,
+      useGradient: useGradient,
+      spacingScale: spacingScale,
+      brandColor: brand.trim(),
     );
   }
 
-  /// Confirm an action.
   static bool confirm(String question, {bool defaultValue = true}) {
     if (!stdin.hasTerminal) return defaultValue;
     return Confirm(prompt: question, defaultValue: defaultValue).interact();

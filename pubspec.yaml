@@ -1,6 +1,6 @@
 name: srik_cli
-description: Flutter project scaffolder. Generates Clean Architecture + Riverpod projects with one command. Architecture-agnostic alternative to very_good_cli.
-version: 0.1.0
+description: Flutter project scaffolder. Choose architecture (Clean, MVVM, Feature-first, Simple), design preset, gradients, and spacing. Generate projects and add features.
+version: 0.2.0
 homepage: https://github.com/srisivas/srik_cli
 repository: https://github.com/srisivas/srik_cli
 issue_tracker: https://github.com/srisivas/srik_cli/issues
@@ -21,6 +21,7 @@ dependencies:
   args: ^2.5.0
   interact: ^2.2.0
   path: ^1.9.0
+  yaml: ^3.1.2
 
 dev_dependencies:
   test: ^1.25.0
