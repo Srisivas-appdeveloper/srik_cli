@@ -99,7 +99,7 @@ class ProjectContext {
           '# srik_cli configuration. Used by `srik add` commands.')
       ..writeln('# This file is managed by srik. Edit the fields below;')
       ..writeln('# user-added comments will not be preserved on regeneration.')
-      ..writeln('version: 0.2.0')
+      ..writeln('version: 0.2.1')
       ..writeln('project_name: $projectName')
       ..writeln('architecture: $architecture')
       ..writeln('state_management: $stateManagement')

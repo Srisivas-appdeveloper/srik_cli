@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.2.1
+
+Internal optimizations — no user-facing behavior changes. Generated output is
+identical (and still passes `flutter analyze` with zero issues on all four
+architectures).
+
+### Performance
+
+- `srik create` runs `flutter pub get` and `git init` concurrently, then
+  commits — shaving time off project creation.
+- Uses `flutter create --empty` when the installed Flutter supports it
+  (3.6+), skipping the throwaway counter-app boilerplate.
+
+### Internal
+
+- Deduplicated architecture templates: shared `main.dart`, `app.dart`, the
+  Dio client, the go_router config, and the home screen body now live in
+  `lib/templates/shared/snippets.dart`. Each architecture composes these
+  snippets instead of copy-pasting source, so a change is made in one place.
+
+### Docs
+
+- README: added an optional "Faster startup" (AOT compile) section.
+- README: corrected `add feature` / `add screen` docs — they support all four
+  architectures (since 0.2.0), not just Clean.
+
 ## 0.2.0
 
 First public release after 0.1.0. Massive expansion of architecture, design,

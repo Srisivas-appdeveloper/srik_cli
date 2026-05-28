@@ -16,6 +16,16 @@ dart pub global activate srik_cli
 
 Make sure `~/.pub-cache/bin` is on your PATH.
 
+## Faster startup (optional)
+
+Compile to a native binary for instant startup:
+
+```bash
+dart compile exe bin/srik.dart -o srik
+```
+
+Then move the `srik` binary onto your PATH.
+
 ## Use
 
 ```bash
@@ -76,15 +86,15 @@ Spacing scale (`compact` / `normal` / `spacious`) controls the density of the sp
 
 ```bash
 srik create <name>                # Create new project
-srik add feature <name>           # Add a feature module (Clean projects)
-srik add screen <name> -f <feat>  # Add a screen to a feature (Clean projects)
+srik add feature <name>           # Add a feature module (all architectures)
+srik add screen <name> -f <feat>  # Add a screen to a feature (all architectures)
 srik doctor                       # Check your environment
 srik --version                    # Print version
 ```
 
 ### Adding features
 
-For Clean Architecture projects, keep scaffolding after creation:
+Keep scaffolding after creation — `add` adapts to your project's architecture:
 
 ```bash
 cd my_app
@@ -92,15 +102,17 @@ srik add feature profile
 srik add screen edit_profile --feature profile
 ```
 
-Each `add feature` generates the full layered structure and updates `srik.yaml`.
+Each `add feature` generates the structure appropriate to the project's
+architecture and updates `srik.yaml`.
 
 ## Roadmap
 
-`v0.3.0` ships architecture choice + design customization. Coming next:
+`v0.2.0` ships architecture choice, design customization, and `add` support
+for all four architectures. Coming next:
 
-- **v0.4** — `add feature` support for MVVM, Feature-first, Simple
-- **v0.5** — Firebase integration (Auth, Firestore, FCM)
-- **v0.6** — Bloc, Provider, GetX state management options
+- **Firebase integration** (Auth, Firestore, FCM)
+- **State management options** (Bloc, Provider, GetX)
+- **`srik rename`** — rename a generated project in place
 
 ## Why not very_good_cli or mason?
 

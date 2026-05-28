@@ -77,7 +77,7 @@ analyzer:
 #   design_system.spacing     compact | normal | spacious.
 #   design_system.brand_color #RRGGBB or #AARRGGBB.
 #   features                  Tracked feature names, one per line.
-version: 0.2.0
+version: 0.2.1
 project_name: ${c.projectName}
 architecture: ${c.architecture.id}
 state_management: riverpod
