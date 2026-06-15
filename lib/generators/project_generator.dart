@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
+import 'package:srik_cli/generators/gradle_editor.dart';
 import 'package:srik_cli/models/enums.dart';
 import 'package:srik_cli/models/project_config.dart';
 import 'package:srik_cli/templates/architectures/clean_templates.dart';
@@ -35,6 +36,12 @@ class ProjectGenerator {
 
     Logger.info('Writing config files...');
     _writeCommonFiles(config);
+
+    if (config.hasFlavors) {
+      Logger.info('Configuring Android build flavors...');
+      GradleEditor.apply(config);
+      GradleEditor.applyManifest(config);
+    }
 
     // `flutter pub get` and `git init` are independent of each other, so run
     // them concurrently. The git commit (which needs `git init` to have run
