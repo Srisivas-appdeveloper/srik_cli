@@ -121,6 +121,13 @@ class ProjectGenerator {
     if (!File(gitignorePath).existsSync()) {
       _write(gitignorePath, CommonTemplates.gitignore(config));
     }
+
+    if (config.hasFlavors) {
+      _write(p.join(root, '.vscode', 'launch.json'),
+          CommonTemplates.vscodeLaunchJson(config));
+      _write(p.join(root, 'FLAVORS_IOS_SETUP.md'),
+          CommonTemplates.flavorsIosSetup(config));
+    }
   }
 
   Future<void> _runFlutterCreate(ProjectConfig config) async {

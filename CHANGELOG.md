@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.3.0
+
+Build flavors. `srik create --flavors=dev,staging,prod` (or the interactive
+prompt) scaffolds a project with separate build variants — each with its own
+app name, bundle ID suffix, API base URL, and entry point. Without `--flavors`,
+output is unchanged from 0.2.x. Verified on all four architectures: generated
+projects pass `flutter analyze` with zero issues, and `flutter build apk
+--flavor dev` produces a working APK.
+
+### New
+
+- `--flavors` option on `srik create` (comma-separated, e.g. `dev,staging,prod`)
+  plus an interactive prompt. Flavor names are validated (lowercase, start with
+  a letter; duplicates and reserved words like `main`/`test` are rejected).
+- **Dart:** one entry point per flavor (`lib/main_<flavor>.dart`); `main.dart`
+  defaults to the first flavor. A generated `app_config.dart` exposes a `Flavor`
+  enum and an `AppConfig` (app name, API base URL, bundle suffix) selected at
+  startup via `AppConfig.current`. The app title and Dio base URL are driven by
+  the active flavor. Config file location follows the chosen architecture
+  (`core/config`, `shared/config`, or `config`).
+- **Android:** a `productFlavors` block is inserted into
+  `android/app/build.gradle{.kts}` (Kotlin and Groovy DSL both supported),
+  parsed and inserted inside the `android { }` block rather than appended.
+  `AndroidManifest.xml` is wired to `@string/app_name` so per-flavor names
+  show on device.
+- **iOS:** a `FLAVORS_IOS_SETUP.md` with step-by-step Xcode instructions (the
+  `.pbxproj` is intentionally not edited programmatically).
+- **VS Code:** `.vscode/launch.json` with one launch configuration per flavor.
+- **README:** a "Flavors" section with per-flavor run/build commands.
+- `srik.yaml` records the chosen flavors under a `flavors:` list.
+
 ## 0.2.1
 
 Internal optimizations — no user-facing behavior changes. Generated output is

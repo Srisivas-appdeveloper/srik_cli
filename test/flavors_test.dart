@@ -215,6 +215,52 @@ void main() {
     });
   });
 
+  group('VS Code launch.json', () {
+    test('has one configuration per flavor', () {
+      final json = CommonTemplates.vscodeLaunchJson(
+        _config(AppArchitecture.clean, flavors: ['dev', 'staging', 'prod']),
+      );
+      expect('"name": "dev"'.allMatches(json).length, 1);
+      expect('"name": "staging"'.allMatches(json).length, 1);
+      expect('"name": "prod"'.allMatches(json).length, 1);
+      expect(json, contains('"program": "lib/main_dev.dart"'));
+      expect(json, contains('"args": ["--flavor", "dev"]'));
+      // One config object per flavor.
+      expect('"type": "dart"'.allMatches(json).length, 3);
+    });
+  });
+
+  group('FLAVORS_IOS_SETUP.md', () {
+    test('references the flavors and the official Flutter docs', () {
+      final md = CommonTemplates.flavorsIosSetup(
+        _config(AppArchitecture.clean, flavors: ['dev', 'prod']),
+      );
+      expect(md, contains('# iOS Flavor Setup'));
+      expect(md, contains('docs.flutter.dev/deployment/flavors-ios'));
+      expect(md, contains('`dev`'));
+      expect(md, contains('`prod`'));
+      expect(md, contains('Runner.xcworkspace'));
+    });
+  });
+
+  group('README flavors section', () {
+    test('includes per-flavor run commands when flavored', () {
+      final readme = CommonTemplates.readme(
+        _config(AppArchitecture.clean, flavors: ['dev', 'prod']),
+      );
+      expect(readme, contains('## Flavors'));
+      expect(readme, contains('flutter run --flavor dev -t lib/main_dev.dart'));
+      expect(readme,
+          contains('flutter build apk --flavor prod -t lib/main_prod.dart'));
+      expect(readme, contains('FLAVORS_IOS_SETUP.md'));
+    });
+
+    test('omits the flavors section without flavors', () {
+      final readme = CommonTemplates.readme(_config(AppArchitecture.clean));
+      expect(readme, isNot(contains('## Flavors')));
+    });
+  });
+
   group('ProjectGenerator writes flavor files to disk', () {
     late Directory tempRoot;
 
@@ -254,6 +300,15 @@ void main() {
         }
         final yaml = File(p.join(root, 'srik.yaml')).readAsStringSync();
         expect(yaml, contains('flavors:'));
+
+        expect(
+          File(p.join(root, '.vscode', 'launch.json')).existsSync(),
+          isTrue,
+        );
+        expect(
+          File(p.join(root, 'FLAVORS_IOS_SETUP.md')).existsSync(),
+          isTrue,
+        );
       });
     }
   });
