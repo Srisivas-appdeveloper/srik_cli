@@ -6,7 +6,7 @@ import 'package:srik_cli/commands/create_command.dart';
 import 'package:srik_cli/commands/doctor_command.dart';
 import 'package:srik_cli/utils/logger.dart';
 
-const String version = '0.2.1';
+const String version = '0.3.0';
 
 Future<void> main(List<String> arguments) async {
   final runner = CommandRunner<int>(

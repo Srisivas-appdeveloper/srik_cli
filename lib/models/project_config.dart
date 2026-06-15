@@ -14,6 +14,11 @@ class ProjectConfig {
   final SpacingScale spacingScale;
   final String brandColor; // hex like #6200EE
 
+  /// Build flavors (e.g. ['dev', 'staging', 'prod']). Empty for a
+  /// single-flavor project — in which case output is unchanged from before
+  /// flavor support existed.
+  final List<String> flavors;
+
   ProjectConfig({
     required this.projectName,
     required this.description,
@@ -24,7 +29,11 @@ class ProjectConfig {
     required this.useGradient,
     required this.spacingScale,
     required this.brandColor,
+    this.flavors = const [],
   });
+
+  /// Whether this project should be generated with build flavors.
+  bool get hasFlavors => flavors.isNotEmpty;
 
   String get projectPath => p.join(outputDirectory, projectName);
 

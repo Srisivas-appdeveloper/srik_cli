@@ -7,19 +7,31 @@ import 'package:srik_cli/utils/string_utils.dart';
 class FeatureFirstTemplates {
   static const String designDir = 'shared/theme';
 
+  /// Folder (relative to lib/) where flavor config is placed.
+  static const String configDir = 'shared/config';
+
   static Map<String, String> files(ProjectConfig c) {
     final name = c.projectName;
     final title = StringUtils.toTitleCase(name);
+    final configImport = c.hasFlavors ? '$configDir/app_config.dart' : null;
 
-    return {
-      'lib/main.dart': Snippets.mainDart(name),
+    final files = <String, String>{
+      'lib/main.dart': c.hasFlavors
+          ? Snippets.flavorEntryPoint(
+              name: name,
+              flavor: c.flavors.first,
+              configImport: configImport!,
+            )
+          : Snippets.mainDart(name),
       'lib/app.dart': Snippets.appWidget(
         name: name,
         title: title,
         themeImport: 'shared/theme/app_theme.dart',
         routerImport: 'shared/router/app_router.dart',
+        configImport: configImport,
       ),
-      'lib/shared/network/dio_client.dart': Snippets.dioClient(),
+      'lib/shared/network/dio_client.dart':
+          Snippets.dioClient(name: name, configImport: configImport),
       'lib/shared/router/app_router.dart': Snippets.appRouter(
         name: name,
         homeImport: 'features/home/home_screen.dart',
@@ -60,5 +72,16 @@ final homeControllerProvider = FutureProvider<HomeModel>((ref) async {
 });
 ''',
     };
+
+    if (c.hasFlavors) {
+      files.addAll(Snippets.flavorFiles(
+        name: name,
+        title: title,
+        configDir: configDir,
+        flavors: c.flavors,
+      ));
+    }
+
+    return files;
   }
 }

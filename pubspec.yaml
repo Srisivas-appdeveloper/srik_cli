@@ -1,6 +1,6 @@
 name: srik_cli
 description: Flutter project scaffolder. Choose architecture (Clean, MVVM, Feature-first, Simple), design preset, gradients, and spacing. Generate projects and add features.
-version: 0.2.1
+version: 0.3.0
 homepage: https://github.com/srisivas/srik_cli
 repository: https://github.com/srisivas/srik_cli
 issue_tracker: https://github.com/srisivas/srik_cli/issues

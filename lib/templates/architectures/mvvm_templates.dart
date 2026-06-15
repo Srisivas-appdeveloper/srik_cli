@@ -7,19 +7,31 @@ import 'package:srik_cli/utils/string_utils.dart';
 class MvvmTemplates {
   static const String designDir = 'core/constants';
 
+  /// Folder (relative to lib/) where flavor config is placed.
+  static const String configDir = 'core/config';
+
   static Map<String, String> files(ProjectConfig c) {
     final name = c.projectName;
     final title = StringUtils.toTitleCase(name);
+    final configImport = c.hasFlavors ? '$configDir/app_config.dart' : null;
 
-    return {
-      'lib/main.dart': Snippets.mainDart(name),
+    final files = <String, String>{
+      'lib/main.dart': c.hasFlavors
+          ? Snippets.flavorEntryPoint(
+              name: name,
+              flavor: c.flavors.first,
+              configImport: configImport!,
+            )
+          : Snippets.mainDart(name),
       'lib/app.dart': Snippets.appWidget(
         name: name,
         title: title,
         themeImport: 'core/constants/app_theme.dart',
         routerImport: 'core/router/app_router.dart',
+        configImport: configImport,
       ),
-      'lib/core/network/dio_client.dart': Snippets.dioClient(),
+      'lib/core/network/dio_client.dart':
+          Snippets.dioClient(name: name, configImport: configImport),
       'lib/core/router/app_router.dart': Snippets.appRouter(
         name: name,
         homeImport: 'views/home_view.dart',
@@ -63,5 +75,16 @@ final homeViewModelProvider =
 });
 ''',
     };
+
+    if (c.hasFlavors) {
+      files.addAll(Snippets.flavorFiles(
+        name: name,
+        title: title,
+        configDir: configDir,
+        flavors: c.flavors,
+      ));
+    }
+
+    return files;
   }
 }

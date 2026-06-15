@@ -8,22 +8,35 @@ class CleanTemplates {
   /// Folder (relative to lib/) where design system files are placed.
   static const String designDir = 'core/constants';
 
+  /// Folder (relative to lib/) where flavor config is placed.
+  static const String configDir = 'core/config';
+
+  /// Storage import used by the entry point (Clean initializes prefs).
+  static const String _storageImport = 'core/storage/local_storage.dart';
+
   static Map<String, String> files(ProjectConfig c) {
     final name = c.projectName;
     final title = StringUtils.toTitleCase(name);
+    final configImport = c.hasFlavors ? '$configDir/app_config.dart' : null;
 
-    return {
-      'lib/main.dart': Snippets.mainDart(
-        name,
-        storageImport: 'core/storage/local_storage.dart',
-      ),
+    final files = <String, String>{
+      'lib/main.dart': c.hasFlavors
+          ? Snippets.flavorEntryPoint(
+              name: name,
+              flavor: c.flavors.first,
+              configImport: configImport!,
+              storageImport: _storageImport,
+            )
+          : Snippets.mainDart(name, storageImport: _storageImport),
       'lib/app.dart': Snippets.appWidget(
         name: name,
         title: title,
         themeImport: 'core/constants/app_theme.dart',
         routerImport: 'core/router/app_router.dart',
+        configImport: configImport,
       ),
-      'lib/core/network/dio_client.dart': Snippets.dioClient(),
+      'lib/core/network/dio_client.dart':
+          Snippets.dioClient(name: name, configImport: configImport),
       'lib/core/router/app_router.dart': Snippets.appRouter(
         name: name,
         homeImport: 'features/home/presentation/screens/home_screen.dart',
@@ -146,5 +159,17 @@ final homeWelcomeProvider = FutureProvider<HomeEntity>((ref) async {
 });
 ''',
     };
+
+    if (c.hasFlavors) {
+      files.addAll(Snippets.flavorFiles(
+        name: name,
+        title: title,
+        configDir: configDir,
+        flavors: c.flavors,
+        storageImport: _storageImport,
+      ));
+    }
+
+    return files;
   }
 }

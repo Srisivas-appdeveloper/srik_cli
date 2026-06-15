@@ -58,7 +58,11 @@ analyzer:
     invalid_annotation_target: ignore
 ''';
 
-  static String srikYaml(ProjectConfig c) => '''
+  static String srikYaml(ProjectConfig c) {
+    final flavorsBlock = c.hasFlavors
+        ? 'flavors:\n${c.flavors.map((f) => '  - $f').join('\n')}\n'
+        : '';
+    return '''
 # srik_cli configuration.
 #
 # This file is read by `srik add feature` and `srik add screen` to know
@@ -76,8 +80,9 @@ analyzer:
 #   design_system.gradient    true to include app_gradients.dart.
 #   design_system.spacing     compact | normal | spacious.
 #   design_system.brand_color #RRGGBB or #AARRGGBB.
+#   flavors                   Build flavors, one per line (omitted if none).
 #   features                  Tracked feature names, one per line.
-version: 0.2.1
+version: 0.3.0
 project_name: ${c.projectName}
 architecture: ${c.architecture.id}
 state_management: riverpod
@@ -89,9 +94,10 @@ design_system:
   gradient: ${c.useGradient}
   spacing: ${c.spacingScale.id}
   brand_color: "${c.brandColor}"
-features:
+${flavorsBlock}features:
   - home
 ''';
+  }
 
   static String readme(ProjectConfig c) {
     final title = StringUtils.toTitleCase(c.projectName);

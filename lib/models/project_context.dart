@@ -16,6 +16,7 @@ class ProjectContext {
   final String designPreset;
   final bool useGradient;
   final String spacingScale;
+  final List<String> flavors;
   final List<String> features;
   final String projectRoot;
 
@@ -30,6 +31,7 @@ class ProjectContext {
     required this.designPreset,
     required this.useGradient,
     required this.spacingScale,
+    required this.flavors,
     required this.features,
     required this.projectRoot,
   });
@@ -59,6 +61,10 @@ class ProjectContext {
     final features = featuresRaw == null
         ? <String>[]
         : featuresRaw.map((e) => e.toString()).toList();
+    final flavorsRaw = doc['flavors'] as YamlList?;
+    final flavors = flavorsRaw == null
+        ? <String>[]
+        : flavorsRaw.map((e) => e.toString()).toList();
 
     return ProjectContext(
       projectName: doc['project_name']?.toString() ?? 'app',
@@ -71,6 +77,7 @@ class ProjectContext {
       designPreset: designSystem?['preset']?.toString() ?? 'material',
       useGradient: designSystem?['gradient'] == true,
       spacingScale: designSystem?['spacing']?.toString() ?? 'normal',
+      flavors: flavors,
       features: features,
       projectRoot: projectRoot,
     );
@@ -99,7 +106,7 @@ class ProjectContext {
           '# srik_cli configuration. Used by `srik add` commands.')
       ..writeln('# This file is managed by srik. Edit the fields below;')
       ..writeln('# user-added comments will not be preserved on regeneration.')
-      ..writeln('version: 0.2.1')
+      ..writeln('version: 0.3.0')
       ..writeln('project_name: $projectName')
       ..writeln('architecture: $architecture')
       ..writeln('state_management: $stateManagement')
@@ -110,8 +117,14 @@ class ProjectContext {
       ..writeln('  preset: $designPreset')
       ..writeln('  gradient: $useGradient')
       ..writeln('  spacing: $spacingScale')
-      ..writeln('  brand_color: "$brandColor"')
-      ..writeln('features:');
+      ..writeln('  brand_color: "$brandColor"');
+    if (flavors.isNotEmpty) {
+      buf.writeln('flavors:');
+      for (final flavor in flavors) {
+        buf.writeln('  - $flavor');
+      }
+    }
+    buf.writeln('features:');
     for (final f in features) {
       buf.writeln('  - $f');
     }

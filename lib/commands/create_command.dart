@@ -51,6 +51,11 @@ class CreateCommand extends Command<int> {
         defaultsTo: '#6200EE',
       )
       ..addOption(
+        'flavors',
+        help: 'Comma-separated build flavors (e.g. dev,staging,prod). '
+            'Omit for a single-flavor project.',
+      )
+      ..addOption(
         'output',
         abbr: 'o',
         help: 'Parent directory for the new project.',
@@ -119,6 +124,15 @@ class CreateCommand extends Command<int> {
       return 64;
     }
 
+    final flavorsArg = results['flavors'] as String?;
+    if (flavorsArg != null && flavorsArg.trim().isNotEmpty) {
+      final flavorsError = Validators.flavors(flavorsArg);
+      if (flavorsError != null) {
+        Logger.error('Invalid --flavors value: $flavorsError');
+        return 64;
+      }
+    }
+
     final interactive = results['interactive'] as bool && stdin.hasTerminal;
 
     Logger.header('Creating Flutter project: $projectName');
@@ -133,6 +147,7 @@ class CreateCommand extends Command<int> {
       providedDesign: results['design'] as String?,
       providedGradient: results['gradient'] as bool?,
       providedSpacing: results['spacing'] as String?,
+      providedFlavors: flavorsArg,
       outputDirectory: output,
       interactive: interactive,
     );
@@ -143,6 +158,8 @@ class CreateCommand extends Command<int> {
     Logger.dim('Gradient:      ${config.useGradient ? 'yes' : 'no'}');
     Logger.dim('Spacing:       ${config.spacingScale.id}');
     Logger.dim('Brand color:   ${config.brandColor}');
+    Logger.dim('Flavors:       '
+        '${config.hasFlavors ? config.flavors.join(', ') : 'none'}');
     Logger.dim('Output:        ${p.absolute(config.outputDirectory)}');
     Logger.plain('');
 

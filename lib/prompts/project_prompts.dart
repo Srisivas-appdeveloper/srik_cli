@@ -17,6 +17,7 @@ class ProjectPrompts {
     String? providedDesign,
     bool? providedGradient,
     String? providedSpacing,
+    String? providedFlavors,
     required String outputDirectory,
     bool interactive = true,
   }) {
@@ -109,6 +110,30 @@ class ProjectPrompts {
               ).interact()
             : '#6200EE');
 
+    // Flavors
+    final List<String> flavors;
+    if (providedFlavors != null && providedFlavors.trim().isNotEmpty) {
+      flavors = Validators.parseFlavors(providedFlavors);
+    } else if (interactive) {
+      final answer = Input(
+        prompt: 'Add build flavors? (dev,staging,prod / none)',
+        defaultValue: 'none',
+        validator: (v) {
+          final t = v.trim();
+          if (t.isEmpty || t.toLowerCase() == 'none') return true;
+          final err = Validators.flavors(t);
+          if (err != null) throw ValidationError(err);
+          return true;
+        },
+      ).interact();
+      final t = answer.trim();
+      flavors = (t.isEmpty || t.toLowerCase() == 'none')
+          ? const []
+          : Validators.parseFlavors(t);
+    } else {
+      flavors = const [];
+    }
+
     return ProjectConfig(
       projectName: projectName.trim(),
       description: description.trim(),
@@ -119,6 +144,7 @@ class ProjectPrompts {
       useGradient: useGradient,
       spacingScale: spacingScale,
       brandColor: brand.trim(),
+      flavors: flavors,
     );
   }
 
