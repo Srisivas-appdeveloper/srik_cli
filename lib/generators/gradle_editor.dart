@@ -22,7 +22,7 @@ class FlavorGradle {
   /// Derive gradle settings from a flavor name and the base app title.
   /// `prod` is treated as the release flavor: no id/version suffix and the
   /// bare app title. Every other flavor gets `.<flavor>` / `-<flavor>` suffixes
-  /// and a "<Title> <Flavor>" label.
+  /// and a `<Title> <Flavor>` label.
   factory FlavorGradle.from(String flavor, String title) {
     if (flavor == 'prod') {
       return FlavorGradle(

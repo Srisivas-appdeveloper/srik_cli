@@ -2,10 +2,10 @@ import 'package:srik_cli/utils/string_utils.dart';
 
 /// Templates for a feature added to an MVVM project.
 /// Layout (under lib/):
-///   models/<name>_model.dart
-///   services/<name>_service.dart
-///   viewmodels/<name>_viewmodel.dart
-///   views/<name>_view.dart
+///   `models/<name>_model.dart`
+///   `services/<name>_service.dart`
+///   `viewmodels/<name>_viewmodel.dart`
+///   `views/<name>_view.dart`
 class MvvmFeatureTemplates {
   static String model(String projectName, String feature) {
     final pascal = StringUtils.toPascalCase(feature);

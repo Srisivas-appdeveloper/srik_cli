@@ -14,9 +14,9 @@ import 'package:srik_cli/utils/string_utils.dart';
 /// Generates feature modules and screens inside existing srik projects.
 ///
 /// Supports all four architectures:
-///   - clean         → layered (domain/data/presentation) under features/<name>/
+///   - clean         → layered (domain/data/presentation) under `features/<name>/`
 ///   - mvvm          → model/service/viewmodel/view across top-level folders
-///   - feature-first → flat files under features/<name>/
+///   - feature-first → flat files under `features/<name>/`
 ///   - simple        → screens/ + models/, no layering
 class FeatureGenerator {
   /// Maps an architecture id to its design folder (relative to lib/).

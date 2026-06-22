@@ -2,8 +2,8 @@ import 'package:srik_cli/utils/string_utils.dart';
 
 /// Templates for adding a screen (and optional model) to a Simple project.
 /// Layout (under lib/):
-///   models/<name>_model.dart
-///   screens/<name>_screen.dart
+///   `models/<name>_model.dart`
+///   `screens/<name>_screen.dart`
 class SimpleAddTemplates {
   static String model(String projectName, String name) {
     final pascal = StringUtils.toPascalCase(name);

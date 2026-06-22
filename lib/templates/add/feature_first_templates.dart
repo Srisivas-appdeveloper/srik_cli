@@ -1,9 +1,9 @@
 import 'package:srik_cli/utils/string_utils.dart';
 
 /// Templates for a feature added to a Feature-first project.
-/// Each feature lives in lib/features/<name>/ with these files:
-///   <name>_model.dart, <name>_service.dart, <name>_controller.dart,
-///   <name>_screen.dart
+/// Each feature lives in `lib/features/<name>/` with these files:
+///   `<name>_model.dart`, `<name>_service.dart`, `<name>_controller.dart`,
+///   `<name>_screen.dart`
 class FeatureFirstAddTemplates {
   static String model(String projectName, String feature) {
     final pascal = StringUtils.toPascalCase(feature);

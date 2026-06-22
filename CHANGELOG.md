@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.1
+
+Pub.dev score fixes — no functional changes.
+
+### Docs
+
+- Wrapped `<name>` / `<flavor>` placeholders in doc comments in backticks so
+  they are no longer parsed as HTML (`unintended_html_in_doc_comment`).
+
+### Metadata
+
+- Fixed the `homepage`, `repository`, and `issue_tracker` URLs in
+  `pubspec.yaml` to point at the actual GitHub repository
+  (`Srisivas-appdeveloper/srik_cli`).
+
 ## 0.3.0
 
 Build flavors. `srik create --flavors=dev,staging,prod` (or the interactive
