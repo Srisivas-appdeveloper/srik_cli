@@ -97,8 +97,7 @@ void main() {
 
       // It is INSIDE android { } — productFlavors appears before the
       // `flutter {` block that follows the android block.
-      expect(out.indexOf('productFlavors'),
-          lessThan(out.indexOf('flutter {')));
+      expect(out.indexOf('productFlavors'), lessThan(out.indexOf('flutter {')));
 
       // Braces still balance.
       final opens = '{'.allMatches(out).length;
@@ -204,8 +203,8 @@ void main() {
         );
 
     void writeGradle(String projectName, String name, String content) {
-      final f = File(p.join(
-          tempRoot.path, projectName, 'android', 'app', name));
+      final f =
+          File(p.join(tempRoot.path, projectName, 'android', 'app', name));
       f.parent.createSync(recursive: true);
       f.writeAsStringSync(content);
     }
@@ -223,9 +222,9 @@ void main() {
     test('edits Groovy build.gradle when no .kts exists', () {
       writeGradle('demo', 'build.gradle', _groovySample);
       GradleEditor.apply(config(['dev']));
-      final out = File(p.join(
-              tempRoot.path, 'demo', 'android', 'app', 'build.gradle'))
-          .readAsStringSync();
+      final out =
+          File(p.join(tempRoot.path, 'demo', 'android', 'app', 'build.gradle'))
+              .readAsStringSync();
       expect(out, contains('productFlavors {'));
       expect(out, contains('dev {'));
     });
@@ -292,10 +291,10 @@ void main() {
       );
       await ProjectGenerator().generate(config);
 
-      final kts = File(p.join(config.projectPath, 'android', 'app',
-          'build.gradle.kts'));
-      final groovy = File(p.join(config.projectPath, 'android', 'app',
-          'build.gradle'));
+      final kts = File(
+          p.join(config.projectPath, 'android', 'app', 'build.gradle.kts'));
+      final groovy =
+          File(p.join(config.projectPath, 'android', 'app', 'build.gradle'));
 
       // Only assert when flutter create actually produced a gradle file.
       if (kts.existsSync()) {

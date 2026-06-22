@@ -49,10 +49,11 @@ features:
       expect(File(p.join(lib, 'services', 'profile_service.dart')).existsSync(),
           isTrue);
       expect(
-          File(p.join(lib, 'viewmodels', 'profile_viewmodel.dart')).existsSync(),
+          File(p.join(lib, 'viewmodels', 'profile_viewmodel.dart'))
+              .existsSync(),
           isTrue);
-      expect(File(p.join(lib, 'views', 'profile_view.dart')).existsSync(),
-          isTrue);
+      expect(
+          File(p.join(lib, 'views', 'profile_view.dart')).existsSync(), isTrue);
     });
 
     test('add screen creates a single view file', () {
@@ -76,7 +77,8 @@ features:
   group('Feature-first', () {
     setUp(() => writeSrikYaml('feature-first'));
 
-    test('add feature creates model/service/controller/screen under features/<name>/',
+    test(
+        'add feature creates model/service/controller/screen under features/<name>/',
         () {
       // Pre-seed an existing home feature (so duplicate check is realistic).
       Directory(p.join(tempRoot.path, 'lib', 'features', 'home'))
@@ -101,7 +103,8 @@ features:
       FeatureGenerator().generateScreen(ctx, 'about', feature: 'home');
 
       expect(
-        File(p.join(tempRoot.path, 'lib', 'features', 'home', 'about_screen.dart'))
+        File(p.join(
+                tempRoot.path, 'lib', 'features', 'home', 'about_screen.dart'))
             .existsSync(),
         isTrue,
       );

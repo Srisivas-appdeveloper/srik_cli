@@ -148,7 +148,8 @@ void main() {
         for (final f in flavors) {
           final path = 'lib/main_$f.dart';
           expect(files.containsKey(path), isTrue, reason: 'expected $path');
-          expect(files[path]!, contains('AppConfig.current = AppConfig.of(Flavor.$f)'));
+          expect(files[path]!,
+              contains('AppConfig.current = AppConfig.of(Flavor.$f)'));
         }
       });
     }

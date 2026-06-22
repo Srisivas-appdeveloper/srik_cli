@@ -73,7 +73,8 @@ void main() {
             );
             break;
           case AppArchitecture.mvvm:
-            expect(File(p.join(libRoot, 'views', 'home_view.dart')).existsSync(),
+            expect(
+                File(p.join(libRoot, 'views', 'home_view.dart')).existsSync(),
                 isTrue);
             expect(
                 File(p.join(libRoot, 'viewmodels', 'home_viewmodel.dart'))
@@ -87,8 +88,10 @@ void main() {
                 isTrue);
             break;
           case AppArchitecture.simple:
-            expect(File(p.join(libRoot, 'screens', 'home_screen.dart'))
-                .existsSync(), isTrue);
+            expect(
+                File(p.join(libRoot, 'screens', 'home_screen.dart'))
+                    .existsSync(),
+                isTrue);
             break;
         }
       });
@@ -99,7 +102,8 @@ void main() {
       final mainContents =
           File(p.join(dir.path, 'lib', 'main.dart')).readAsStringSync();
       expect(mainContents, contains('SharedPreferences.getInstance()'));
-      expect(mainContents, contains('sharedPreferencesProvider.overrideWithValue'));
+      expect(mainContents,
+          contains('sharedPreferencesProvider.overrideWithValue'));
     });
 
     test('gradient flag generates app_gradients.dart', () async {
@@ -108,8 +112,7 @@ void main() {
         gradient: true,
       ));
       expect(
-        File(p.join(dir.path, 'lib', 'core', 'constants',
-                'app_gradients.dart'))
+        File(p.join(dir.path, 'lib', 'core', 'constants', 'app_gradients.dart'))
             .existsSync(),
         isTrue,
       );
@@ -118,15 +121,13 @@ void main() {
     test('no gradient flag skips app_gradients.dart', () async {
       final dir = await runGen(makeConfig(AppArchitecture.clean));
       expect(
-        File(p.join(dir.path, 'lib', 'core', 'constants',
-                'app_gradients.dart'))
+        File(p.join(dir.path, 'lib', 'core', 'constants', 'app_gradients.dart'))
             .existsSync(),
         isFalse,
       );
     });
 
-    test('throws when output directory already contains the project',
-        () async {
+    test('throws when output directory already contains the project', () async {
       final config = makeConfig(AppArchitecture.clean, name: 'collision_app');
       await runGen(config);
       // Second generation into the same path should fail.
@@ -146,8 +147,7 @@ void main() {
       final dir = await runGen(config);
 
       // Load it back.
-      final yaml =
-          File(p.join(dir.path, 'srik.yaml')).readAsStringSync();
+      final yaml = File(p.join(dir.path, 'srik.yaml')).readAsStringSync();
       expect(yaml, contains('architecture: mvvm'));
       expect(yaml, contains('preset: vibrant'));
       expect(yaml, contains('gradient: true'));

@@ -6,14 +6,14 @@ void main() {
   group('AppArchitecture', () {
     test('parses common variants', () {
       expect(AppArchitecture.parse('clean'), AppArchitecture.clean);
-      expect(AppArchitecture.parse('Clean Architecture'),
-          AppArchitecture.clean);
+      expect(
+          AppArchitecture.parse('Clean Architecture'), AppArchitecture.clean);
       expect(AppArchitecture.parse('mvvm'), AppArchitecture.mvvm);
       expect(AppArchitecture.parse('MVVM'), AppArchitecture.mvvm);
-      expect(AppArchitecture.parse('feature-first'),
-          AppArchitecture.featureFirst);
-      expect(AppArchitecture.parse('feature_first'),
-          AppArchitecture.featureFirst);
+      expect(
+          AppArchitecture.parse('feature-first'), AppArchitecture.featureFirst);
+      expect(
+          AppArchitecture.parse('feature_first'), AppArchitecture.featureFirst);
       expect(AppArchitecture.parse('simple'), AppArchitecture.simple);
     });
 
@@ -42,8 +42,7 @@ void main() {
     });
 
     test('throws on unknown', () {
-      expect(() => DesignPreset.parse('xyz'),
-          throwsA(isA<FormatException>()));
+      expect(() => DesignPreset.parse('xyz'), throwsA(isA<FormatException>()));
     });
   });
 

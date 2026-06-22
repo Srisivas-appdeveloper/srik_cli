@@ -72,20 +72,29 @@ features:
       FeatureGenerator().generateFeature(ctx, 'profile');
 
       final base = p.join(tempProject.path, 'lib', 'features', 'profile');
-      expect(File(p.join(base, 'domain', 'entities', 'profile_entity.dart'))
-          .existsSync(), isTrue);
-      expect(File(p.join(base, 'domain', 'repositories',
-              'profile_repository.dart'))
-          .existsSync(), isTrue);
-      expect(File(p.join(base, 'data', 'repositories',
-              'profile_repository_impl.dart'))
-          .existsSync(), isTrue);
-      expect(File(p.join(base, 'presentation', 'providers',
-              'profile_provider.dart'))
-          .existsSync(), isTrue);
-      expect(File(p.join(base, 'presentation', 'screens',
-              'profile_screen.dart'))
-          .existsSync(), isTrue);
+      expect(
+          File(p.join(base, 'domain', 'entities', 'profile_entity.dart'))
+              .existsSync(),
+          isTrue);
+      expect(
+          File(p.join(
+                  base, 'domain', 'repositories', 'profile_repository.dart'))
+              .existsSync(),
+          isTrue);
+      expect(
+          File(p.join(
+                  base, 'data', 'repositories', 'profile_repository_impl.dart'))
+              .existsSync(),
+          isTrue);
+      expect(
+          File(p.join(
+                  base, 'presentation', 'providers', 'profile_provider.dart'))
+              .existsSync(),
+          isTrue);
+      expect(
+          File(p.join(base, 'presentation', 'screens', 'profile_screen.dart'))
+              .existsSync(),
+          isTrue);
     });
 
     test('updates srik.yaml features list', () {
@@ -124,14 +133,17 @@ features:
       final ctx = ProjectContext.load(tempProject.path)!;
       FeatureGenerator().generateScreen(ctx, 'settings', feature: 'home');
 
-      final featureRoot =
-          p.join(tempProject.path, 'lib', 'features', 'home');
-      expect(File(p.join(featureRoot, 'presentation', 'screens',
-              'settings_screen.dart'))
-          .existsSync(), isTrue);
-      expect(File(p.join(featureRoot, 'presentation', 'providers',
-              'settings_provider.dart'))
-          .existsSync(), isTrue);
+      final featureRoot = p.join(tempProject.path, 'lib', 'features', 'home');
+      expect(
+          File(p.join(featureRoot, 'presentation', 'screens',
+                  'settings_screen.dart'))
+              .existsSync(),
+          isTrue);
+      expect(
+          File(p.join(featureRoot, 'presentation', 'providers',
+                  'settings_provider.dart'))
+              .existsSync(),
+          isTrue);
     });
 
     test('rejects screen in non-existent feature', () {

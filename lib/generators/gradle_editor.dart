@@ -197,12 +197,14 @@ class GradleEditor {
       buf.writeln('        create("${f.name}") {');
       buf.writeln('            dimension = "$_dimension"');
       if (f.applicationIdSuffix.isNotEmpty) {
-        buf.writeln('            applicationIdSuffix = "${f.applicationIdSuffix}"');
+        buf.writeln(
+            '            applicationIdSuffix = "${f.applicationIdSuffix}"');
       }
       if (f.versionNameSuffix.isNotEmpty) {
         buf.writeln('            versionNameSuffix = "${f.versionNameSuffix}"');
       }
-      buf.writeln('            resValue("string", "app_name", "${f.appLabel}")');
+      buf.writeln(
+          '            resValue("string", "app_name", "${f.appLabel}")');
       buf.writeln('        }');
     }
     buf.write('    }');
@@ -219,7 +221,8 @@ class GradleEditor {
       buf.writeln('        ${f.name} {');
       buf.writeln('            dimension "$_dimension"');
       if (f.applicationIdSuffix.isNotEmpty) {
-        buf.writeln('            applicationIdSuffix "${f.applicationIdSuffix}"');
+        buf.writeln(
+            '            applicationIdSuffix "${f.applicationIdSuffix}"');
       }
       if (f.versionNameSuffix.isNotEmpty) {
         buf.writeln('            versionNameSuffix "${f.versionNameSuffix}"');

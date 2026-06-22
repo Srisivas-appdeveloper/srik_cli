@@ -52,11 +52,8 @@ class Validators {
   }
 
   /// Splits a comma-separated flavors string into a trimmed, non-empty list.
-  static List<String> parseFlavors(String input) => input
-      .split(',')
-      .map((e) => e.trim())
-      .where((e) => e.isNotEmpty)
-      .toList();
+  static List<String> parseFlavors(String input) =>
+      input.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
 
   /// Validates a comma-separated flavors string (e.g. `dev,staging,prod`).
   /// Returns null when valid, or an error message describing the first

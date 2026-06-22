@@ -120,18 +120,17 @@ class FeatureGenerator {
       FeatureModuleTemplates.entity(name, snake),
     );
     _write(
-      p.join(featureRoot, 'domain', 'repositories',
-          '${snake}_repository.dart'),
+      p.join(featureRoot, 'domain', 'repositories', '${snake}_repository.dart'),
       FeatureModuleTemplates.repository(name, snake),
     );
     _write(
-      p.join(featureRoot, 'data', 'repositories',
-          '${snake}_repository_impl.dart'),
+      p.join(
+          featureRoot, 'data', 'repositories', '${snake}_repository_impl.dart'),
       FeatureModuleTemplates.repositoryImpl(name, snake),
     );
     _write(
-      p.join(featureRoot, 'presentation', 'providers',
-          '${snake}_provider.dart'),
+      p.join(
+          featureRoot, 'presentation', 'providers', '${snake}_provider.dart'),
       FeatureModuleTemplates.provider(name, snake),
     );
     _write(
@@ -158,8 +157,8 @@ class FeatureGenerator {
       );
     }
 
-    final screenPath = p.join(
-        featureRoot, 'presentation', 'screens', '${snake}_screen.dart');
+    final screenPath =
+        p.join(featureRoot, 'presentation', 'screens', '${snake}_screen.dart');
     _ensureFileNotExists(screenPath, 'Screen');
 
     final name = ctx.projectName;
@@ -172,8 +171,8 @@ class FeatureGenerator {
       ScreenTemplates.screen(name, featureSnake, snake, designDir),
     );
     _write(
-      p.join(featureRoot, 'presentation', 'providers',
-          '${snake}_provider.dart'),
+      p.join(
+          featureRoot, 'presentation', 'providers', '${snake}_provider.dart'),
       ScreenTemplates.provider(snake),
     );
 
@@ -201,7 +200,8 @@ class FeatureGenerator {
     _write(p.join(libRoot, 'views', '${snake}_view.dart'),
         MvvmFeatureTemplates.view(name, snake, designDir));
 
-    Logger.success('Feature "$snake" created (model + service + viewmodel + view).');
+    Logger.success(
+        'Feature "$snake" created (model + service + viewmodel + view).');
     Logger.dim('  Register the route in lib/core/router/app_router.dart');
   }
 
@@ -268,7 +268,8 @@ class FeatureGenerator {
     Logger.info('Generating screen: $snake in feature $featureSnake');
     _write(
       screenPath,
-      FeatureFirstAddTemplates.simpleScreen(name, featureSnake, snake, designDir),
+      FeatureFirstAddTemplates.simpleScreen(
+          name, featureSnake, snake, designDir),
     );
 
     Logger.success('Screen "$snake" created in lib/features/$featureSnake/');

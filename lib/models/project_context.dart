@@ -102,8 +102,7 @@ class ProjectContext {
 
   String _render() {
     final buf = StringBuffer()
-      ..writeln(
-          '# srik_cli configuration. Used by `srik add` commands.')
+      ..writeln('# srik_cli configuration. Used by `srik add` commands.')
       ..writeln('# This file is managed by srik. Edit the fields below;')
       ..writeln('# user-added comments will not be preserved on regeneration.')
       ..writeln('version: 0.3.0')
