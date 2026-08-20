@@ -40,7 +40,7 @@ The interactive prompt lets you pick everything:
 ? Description           A new Flutter app
 ? Organization          com.example
 ? Architecture          Clean Architecture / MVVM / Feature-first / Simple
-? Design preset         Material / Vibrant / Minimal
+? Choose a design style Material / Vibrant / Minimalism / Neomorphism / …
 ? Add gradient theme?   y/N
 ? Spacing scale         Compact / Normal / Spacious
 ? Brand color (hex)     #6200EE
@@ -70,17 +70,38 @@ srik create my_app \
 
 All architectures come wired with Riverpod, go_router, and Dio.
 
-## Design presets
+## Design styles
 
-| Preset | Look |
+`--design` selects a **generated design system**, not just a color palette. Screens use reusable components (`AppSurface`, `AppCard`, `AppButton`, `AppTextField`, …). The style decides how those components render.
+
+| Style | Look |
 |---|---|
-| **Material** | Google's Material 3 defaults |
-| **Vibrant** | Saturated, modern startup style |
-| **Minimal** | Low contrast, neutral, sharp corners |
+| **material** | Material 3 defaults, native Flutter semantics |
+| **vibrant** | Saturated startup look, stronger hierarchy, optional gradients |
+| **minimalism** | Restrained type-first UI. Alias: `minimal` |
+| **neomorphism** | Soft extruded / inset surfaces via paired light and dark shadows |
+| **skeuomorphism** | Tactile depth using gradients, highlights, and borders (no raster textures) |
+| **glassmorphism** | Translucent surfaces with blur, tint, and edge highlights |
+| **claymorphism** | Large radii, inflated shapes, soft inner/outer shadows |
+| **maximalism** | Bold type, high energy, decorative layering |
+| **brutalism** | Hard borders, offset shadows, blocky geometry |
+| **liquid_glass** | Layered blur, luminous edges, fluid motion. Aliases: `liquidglass`, `liquid-glass` |
+| **spatial_ui** | Floating depth, scale, and layered hierarchy. Aliases: `spatialui`, `spatial-ui` |
 
-Every preset generates design tokens (`app_colors`, `app_spacing`, `app_text_styles`, `app_radius`, `app_durations`, `app_theme`) from your brand color. Add `--gradient` for an `app_gradients` file with brand-derived gradients.
+Every style generates semantic tokens (color, spacing, radius, typography, shadow, blur, border, opacity, elevation, motion, size) plus light and dark `ThemeData` with `ThemeExtension`s. `--brand` is expanded per style rather than pasted through unchanged. `--gradient` still enables prominent brand gradients (legacy `app_gradients.dart` shim included).
 
-Spacing scale (`compact` / `normal` / `spacious`) controls the density of the spacing tokens.
+Glassmorphism, Liquid Glass, and Spatial UI keep expensive blur inside `AppSurface`. If the device reports disabled animations, those primitives fall back to opaque elevated surfaces.
+
+Spacing scale (`compact` / `normal` / `spacious`) controls token density.
+
+```bash
+srik create my_app --arch=clean --design=glassmorphism --brand=#6750A4
+srik create finance_app --arch=mvvm --design=neomorphism --brand=#2457F5
+srik create portfolio --design=brutalism --brand=#FF5A36
+srik create spatial_demo --design=spatial_ui --brand=#7C5CFC
+srik create premium_app --design=liquid_glass --gradient --brand=#0A84FF
+srik create my_app --design=minimal
+```
 
 ## Commands
 

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
+import 'package:srik_cli/design/design_paths.dart';
 import 'package:srik_cli/generators/gradle_editor.dart';
 import 'package:srik_cli/models/enums.dart';
 import 'package:srik_cli/models/project_config.dart';
@@ -31,7 +32,7 @@ class ProjectGenerator {
     Logger.info('Generating ${config.architecture.label} files...');
     _writeArchitectureFiles(config);
 
-    Logger.info('Applying ${config.designPreset.id} design system...');
+    Logger.info('Applying ${config.designStyle.id} design system...');
     _writeDesignFiles(config);
 
     Logger.info('Writing config files...');
@@ -56,6 +57,8 @@ class ProjectGenerator {
     spinner.stop();
     Logger.info('Dependencies installed');
 
+    await _formatGenerated(config);
+
     if (hasGit) {
       await _gitCommit(config);
       Logger.info('Initialized git repository');
@@ -65,18 +68,10 @@ class ProjectGenerator {
   }
 
   /// Returns the design folder (relative to lib/) for the chosen architecture.
-  String _designDir(AppArchitecture arch) {
-    switch (arch) {
-      case AppArchitecture.clean:
-        return CleanTemplates.designDir;
-      case AppArchitecture.mvvm:
-        return MvvmTemplates.designDir;
-      case AppArchitecture.featureFirst:
-        return FeatureFirstTemplates.designDir;
-      case AppArchitecture.simple:
-        return SimpleTemplates.designDir;
-    }
-  }
+  String _designDir(AppArchitecture arch) => DesignPaths.systemDir(arch);
+
+  String _legacyTokenDir(AppArchitecture arch) =>
+      DesignPaths.legacyTokenDir(arch);
 
   Map<String, String> _architectureFiles(ProjectConfig config) {
     switch (config.architecture) {
@@ -104,6 +99,14 @@ class ProjectGenerator {
     files.forEach((fileName, contents) {
       _write(
         p.join(config.projectPath, 'lib', designDir, fileName),
+        contents,
+      );
+    });
+
+    final legacyDir = _legacyTokenDir(config.architecture);
+    DesignTemplates.legacyShims(config).forEach((fileName, contents) {
+      _write(
+        p.join(config.projectPath, 'lib', legacyDir, fileName),
         contents,
       );
     });
@@ -222,6 +225,23 @@ class ProjectGenerator {
     final file = File(path);
     file.parent.createSync(recursive: true);
     file.writeAsStringSync(contents);
+  }
+
+  Future<void> _formatGenerated(ProjectConfig config) async {
+    try {
+      final result = await Process.run(
+        Platform.resolvedExecutable,
+        ['format', 'lib'],
+        workingDirectory: config.projectPath,
+      );
+      if (result.exitCode == 0) {
+        Logger.info('Formatted generated Dart');
+      } else {
+        Logger.debug('dart format exited ${result.exitCode}: ${result.stderr}');
+      }
+    } catch (e) {
+      Logger.debug('dart format skipped: $e');
+    }
   }
 
   Future<void> _runPubGet(ProjectConfig config) async {

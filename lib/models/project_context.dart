@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
+import 'package:srik_cli/models/enums.dart';
 import 'package:yaml/yaml.dart';
 
 /// Loaded from srik.yaml in an existing project root.
@@ -19,6 +20,8 @@ class ProjectContext {
   final List<String> flavors;
   final List<String> features;
   final String projectRoot;
+  final int schemaVersion;
+  final bool darkMode;
 
   ProjectContext({
     required this.projectName,
@@ -34,7 +37,12 @@ class ProjectContext {
     required this.flavors,
     required this.features,
     required this.projectRoot,
+    this.schemaVersion = 1,
+    this.darkMode = true,
   });
+
+  /// New projects generate a nested design system; v0.3 projects do not.
+  bool get usesDesignSystem => schemaVersion >= 2;
 
   /// Search up from [startDir] for a `srik.yaml` and load it.
   /// Returns null if no config is found.
@@ -57,6 +65,7 @@ class ProjectContext {
     final doc = loadYaml(file.readAsStringSync()) as YamlMap;
 
     final designSystem = doc['design_system'] as YamlMap?;
+    final design = doc['design'] as YamlMap?;
     final featuresRaw = doc['features'] as YamlList?;
     final features = featuresRaw == null
         ? <String>[]
@@ -66,6 +75,26 @@ class ProjectContext {
         ? <String>[]
         : flavorsRaw.map((e) => e.toString()).toList();
 
+    final schemaRaw = doc['schema_version'];
+    final schemaVersion = schemaRaw is int
+        ? schemaRaw
+        : int.tryParse(schemaRaw?.toString() ?? '') ?? (design != null ? 2 : 1);
+
+    final rawStyle = design?['style']?.toString() ??
+        designSystem?['preset']?.toString() ??
+        'material';
+    final normalizedStyle = DesignStyle.tryParse(rawStyle)?.id ?? rawStyle;
+
+    final brand = design?['brand']?.toString() ??
+        designSystem?['brand_color']?.toString() ??
+        '#6200EE';
+    final spacing = design?['spacing']?.toString() ??
+        designSystem?['spacing']?.toString() ??
+        'normal';
+    final gradient =
+        design?['gradient'] == true || designSystem?['gradient'] == true;
+    final darkMode = design?['dark_mode'] != false;
+
     return ProjectContext(
       projectName: doc['project_name']?.toString() ?? 'app',
       architecture: doc['architecture']?.toString() ?? 'clean',
@@ -73,13 +102,15 @@ class ProjectContext {
       routing: doc['routing']?.toString() ?? 'go_router',
       storage: doc['storage']?.toString() ?? 'shared_preferences',
       network: doc['network']?.toString() ?? 'dio',
-      brandColor: designSystem?['brand_color']?.toString() ?? '#6200EE',
-      designPreset: designSystem?['preset']?.toString() ?? 'material',
-      useGradient: designSystem?['gradient'] == true,
-      spacingScale: designSystem?['spacing']?.toString() ?? 'normal',
+      brandColor: brand,
+      designPreset: normalizedStyle,
+      useGradient: gradient,
+      spacingScale: spacing,
       flavors: flavors,
       features: features,
       projectRoot: projectRoot,
+      schemaVersion: schemaVersion,
+      darkMode: darkMode,
     );
   }
 
@@ -101,6 +132,46 @@ class ProjectContext {
   }
 
   String _render() {
+    if (schemaVersion < 2) {
+      return _renderLegacy();
+    }
+    final buf = StringBuffer()
+      ..writeln('# srik_cli configuration. Used by `srik add` commands.')
+      ..writeln('# This file is managed by srik. Edit the fields below;')
+      ..writeln('# user-added comments will not be preserved on regeneration.')
+      ..writeln('version: 0.4.0')
+      ..writeln('schema_version: 2')
+      ..writeln('project_name: $projectName')
+      ..writeln('architecture: $architecture')
+      ..writeln('state_management: $stateManagement')
+      ..writeln('routing: $routing')
+      ..writeln('storage: $storage')
+      ..writeln('network: $network')
+      ..writeln('design_system:')
+      ..writeln('  preset: $designPreset')
+      ..writeln('  gradient: $useGradient')
+      ..writeln('  spacing: $spacingScale')
+      ..writeln('  brand_color: "$brandColor"')
+      ..writeln('design:')
+      ..writeln('  style: $designPreset')
+      ..writeln('  brand: "$brandColor"')
+      ..writeln('  spacing: $spacingScale')
+      ..writeln('  gradient: $useGradient')
+      ..writeln('  dark_mode: $darkMode');
+    if (flavors.isNotEmpty) {
+      buf.writeln('flavors:');
+      for (final flavor in flavors) {
+        buf.writeln('  - $flavor');
+      }
+    }
+    buf.writeln('features:');
+    for (final f in features) {
+      buf.writeln('  - $f');
+    }
+    return buf.toString();
+  }
+
+  String _renderLegacy() {
     final buf = StringBuffer()
       ..writeln('# srik_cli configuration. Used by `srik add` commands.')
       ..writeln('# This file is managed by srik. Edit the fields below;')

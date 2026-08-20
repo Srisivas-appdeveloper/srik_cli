@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
+import 'package:srik_cli/design/design_paths.dart';
 import 'package:srik_cli/models/project_context.dart';
 import 'package:srik_cli/templates/add/feature_first_templates.dart';
 import 'package:srik_cli/templates/add/feature_module_templates.dart';
@@ -19,22 +20,31 @@ import 'package:srik_cli/utils/string_utils.dart';
 ///   - feature-first → flat files under `features/<name>/`
 ///   - simple        → screens/ + models/, no layering
 class FeatureGenerator {
-  /// Maps an architecture id to its design folder (relative to lib/).
+  /// Maps an architecture id to its design-system folder (relative to lib/).
+  ///
+  /// New projects (schema_version >= 2) use this path. Older projects keep
+  /// tokens under `core/constants`, `shared/theme`, or `theme`.
   static String designDirFor(String architecture) {
-    switch (architecture) {
-      case 'clean':
-        return 'core/constants';
-      case 'mvvm':
-        return 'core/constants';
-      case 'feature-first':
-        return 'shared/theme';
-      case 'simple':
-        return 'theme';
-      default:
-        throw ArgumentError(
-          'Unknown architecture "$architecture". '
-          'Expected one of: clean, mvvm, feature-first, simple.',
-        );
+    try {
+      return DesignPaths.systemDirFromId(architecture);
+    } on FormatException {
+      throw ArgumentError(
+        'Unknown architecture "$architecture". '
+        'Expected one of: clean, mvvm, feature-first, simple.',
+      );
+    }
+  }
+
+  /// Token / component import folder for an existing project.
+  static String tokenDirFor(ProjectContext ctx) {
+    if (ctx.usesDesignSystem) return designDirFor(ctx.architecture);
+    try {
+      return DesignPaths.legacyTokenDirFromId(ctx.architecture);
+    } on FormatException {
+      throw ArgumentError(
+        'Unknown architecture "${ctx.architecture}". '
+        'Expected one of: clean, mvvm, feature-first, simple.',
+      );
     }
   }
 
@@ -111,7 +121,7 @@ class FeatureGenerator {
     _ensureNotExists(featureRoot, 'Feature', 'lib/features/$snake');
 
     final name = ctx.projectName;
-    final designDir = designDirFor(ctx.architecture);
+    final designDir = tokenDirFor(ctx);
 
     Logger.info('Generating feature: $snake');
 
@@ -162,7 +172,7 @@ class FeatureGenerator {
     _ensureFileNotExists(screenPath, 'Screen');
 
     final name = ctx.projectName;
-    final designDir = designDirFor(ctx.architecture);
+    final designDir = tokenDirFor(ctx);
 
     Logger.info('Generating screen: $snake in feature $featureSnake');
 
@@ -188,7 +198,7 @@ class FeatureGenerator {
     _ensureFileNotExists(modelPath, 'Feature model');
 
     final name = ctx.projectName;
-    final designDir = designDirFor(ctx.architecture);
+    final designDir = tokenDirFor(ctx);
 
     Logger.info('Generating MVVM feature: $snake');
 
@@ -211,7 +221,7 @@ class FeatureGenerator {
     _ensureFileNotExists(viewPath, 'View');
 
     final name = ctx.projectName;
-    final designDir = designDirFor(ctx.architecture);
+    final designDir = tokenDirFor(ctx);
 
     Logger.info('Generating MVVM view: $snake');
     _write(viewPath, MvvmFeatureTemplates.screen(name, snake, designDir));
@@ -227,7 +237,7 @@ class FeatureGenerator {
     _ensureNotExists(featureRoot, 'Feature', 'lib/features/$snake');
 
     final name = ctx.projectName;
-    final designDir = designDirFor(ctx.architecture);
+    final designDir = tokenDirFor(ctx);
 
     Logger.info('Generating feature-first feature: $snake');
 
@@ -263,7 +273,7 @@ class FeatureGenerator {
     _ensureFileNotExists(screenPath, 'Screen');
 
     final name = ctx.projectName;
-    final designDir = designDirFor(ctx.architecture);
+    final designDir = tokenDirFor(ctx);
 
     Logger.info('Generating screen: $snake in feature $featureSnake');
     _write(
@@ -285,7 +295,7 @@ class FeatureGenerator {
     _ensureFileNotExists(screenPath, 'Screen');
 
     final name = ctx.projectName;
-    final designDir = designDirFor(ctx.architecture);
+    final designDir = tokenDirFor(ctx);
 
     Logger.info('Generating screen + model: $snake');
     _write(p.join(libRoot, 'models', '${snake}_model.dart'),
@@ -302,7 +312,7 @@ class FeatureGenerator {
     _ensureFileNotExists(screenPath, 'Screen');
 
     final name = ctx.projectName;
-    final designDir = designDirFor(ctx.architecture);
+    final designDir = tokenDirFor(ctx);
 
     Logger.info('Generating screen: $snake');
     _write(screenPath, SimpleAddTemplates.screen(name, snake, designDir));
@@ -329,5 +339,13 @@ class FeatureGenerator {
     final file = File(path);
     file.parent.createSync(recursive: true);
     file.writeAsStringSync(contents);
+    try {
+      Process.runSync(
+        Platform.resolvedExecutable,
+        ['format', path],
+      );
+    } catch (_) {
+      // Formatting is best-effort; generated code is still written.
+    }
   }
 }

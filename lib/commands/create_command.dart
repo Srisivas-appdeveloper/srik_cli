@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:path/path.dart' as p;
 import 'package:srik_cli/generators/project_generator.dart';
+import 'package:srik_cli/models/enums.dart';
 import 'package:srik_cli/prompts/project_prompts.dart';
 import 'package:srik_cli/prompts/validators.dart';
 import 'package:srik_cli/utils/logger.dart';
@@ -32,8 +33,9 @@ class CreateCommand extends Command<int> {
       )
       ..addOption(
         'design',
-        help: 'Design preset.',
-        allowed: ['material', 'vibrant', 'minimal'],
+        help: 'Design style. Aliases: minimal, liquidglass, spatialui, '
+            'neoorphism.',
+        allowed: DesignStyle.cliValues,
       )
       ..addFlag(
         'gradient',
@@ -154,7 +156,7 @@ class CreateCommand extends Command<int> {
 
     Logger.plain('');
     Logger.dim('Architecture:  ${config.architecture.label}');
-    Logger.dim('Design preset: ${config.designPreset.id}');
+    Logger.dim('Design style:  ${config.designStyle.id}');
     Logger.dim('Gradient:      ${config.useGradient ? 'yes' : 'no'}');
     Logger.dim('Spacing:       ${config.spacingScale.id}');
     Logger.dim('Brand color:   ${config.brandColor}');

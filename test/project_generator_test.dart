@@ -150,8 +150,25 @@ void main() {
       final yaml = File(p.join(dir.path, 'srik.yaml')).readAsStringSync();
       expect(yaml, contains('architecture: mvvm'));
       expect(yaml, contains('preset: vibrant'));
+      expect(yaml, contains('style: vibrant'));
+      expect(yaml, contains('schema_version: 2'));
       expect(yaml, contains('gradient: true'));
       expect(yaml, contains('spacing: spacious'));
+    });
+
+    test('writes nested design-system files', () async {
+      final dir = await runGen(makeConfig(AppArchitecture.clean));
+      expect(
+        File(p.join(dir.path, 'lib', 'core', 'design', 'design_system.dart'))
+            .existsSync(),
+        isTrue,
+      );
+      expect(
+        File(p.join(dir.path, 'lib', 'core', 'design', 'components',
+                'app_surface.dart'))
+            .existsSync(),
+        isTrue,
+      );
     });
   });
 }

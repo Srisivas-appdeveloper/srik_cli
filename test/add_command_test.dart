@@ -146,6 +146,19 @@ features:
           isTrue);
     });
 
+    test('underscored screen names use camelCase providers', () {
+      final ctx = ProjectContext.load(tempProject.path)!;
+      FeatureGenerator()
+          .generateScreen(ctx, 'edit_profile', feature: 'home');
+
+      final provider = File(
+        p.join(tempProject.path, 'lib', 'features', 'home', 'presentation',
+            'providers', 'edit_profile_provider.dart'),
+      ).readAsStringSync();
+      expect(provider, contains('editProfileStateProvider'));
+      expect(provider, isNot(contains('edit_profileStateProvider')));
+    });
+
     test('rejects screen in non-existent feature', () {
       final ctx = ProjectContext.load(tempProject.path)!;
       expect(

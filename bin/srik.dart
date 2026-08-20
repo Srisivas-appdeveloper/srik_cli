@@ -6,12 +6,14 @@ import 'package:srik_cli/commands/create_command.dart';
 import 'package:srik_cli/commands/doctor_command.dart';
 import 'package:srik_cli/utils/logger.dart';
 
-const String version = '0.3.1';
+const String version = '0.4.0';
 
 Future<void> main(List<String> arguments) async {
   final runner = CommandRunner<int>(
     'srik',
-    'Flutter project scaffolder with Clean Architecture + Riverpod.\n\n'
+    'Flutter project scaffolder with architecture choice and a generated\n'
+        'design system (Material, Vibrant, Minimalism, Neomorphism,\n'
+        'Glassmorphism, Liquid Glass, Spatial UI, and more).\n\n'
         'Run `srik create <project_name>` to generate a new app.',
   )
     ..argParser.addFlag(

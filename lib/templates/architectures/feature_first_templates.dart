@@ -5,7 +5,7 @@ import 'package:srik_cli/utils/string_utils.dart';
 /// Feature-first template set.
 /// Design files live in lib/shared/theme/.
 class FeatureFirstTemplates {
-  static const String designDir = 'shared/theme';
+  static const String designDir = 'shared/design';
 
   /// Folder (relative to lib/) where flavor config is placed.
   static const String configDir = 'shared/config';
@@ -26,7 +26,7 @@ class FeatureFirstTemplates {
       'lib/app.dart': Snippets.appWidget(
         name: name,
         title: title,
-        themeImport: 'shared/theme/app_theme.dart',
+        themeImport: 'shared/design/themes/app_theme.dart',
         routerImport: 'shared/router/app_router.dart',
         configImport: configImport,
       ),

@@ -90,7 +90,7 @@ class DesignPalette {
           ],
           gradientEnd: 'FFEC4899',
         );
-      case DesignPreset.minimal:
+      case DesignStyle.minimalism:
         return const DesignPalette(
           secondary: 'FF404040',
           background: 'FFFFFFFF',
@@ -117,6 +117,8 @@ class DesignPalette {
           ],
           gradientEnd: 'FF737373',
         );
+      default:
+        return DesignPalette.forPreset(DesignStyle.material);
     }
   }
 }

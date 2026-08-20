@@ -34,15 +34,38 @@ void main() {
     });
   });
 
-  group('DesignPreset', () {
-    test('parses variants', () {
-      expect(DesignPreset.parse('material'), DesignPreset.material);
-      expect(DesignPreset.parse('vibrant'), DesignPreset.vibrant);
-      expect(DesignPreset.parse('minimal'), DesignPreset.minimal);
+  group('DesignStyle', () {
+    test('parses canonical ids and aliases', () {
+      expect(DesignStyle.parse('material'), DesignStyle.material);
+      expect(DesignStyle.parse('vibrant'), DesignStyle.vibrant);
+      expect(DesignStyle.parse('minimal'), DesignStyle.minimalism);
+      expect(DesignStyle.parse('minimalism'), DesignStyle.minimalism);
+      expect(DesignStyle.parse('neoorphism'), DesignStyle.neomorphism);
+      expect(DesignStyle.parse('neuomorphism'), DesignStyle.neomorphism);
+      expect(DesignStyle.parse('liquidglass'), DesignStyle.liquidGlass);
+      expect(DesignStyle.parse('liquid-glass'), DesignStyle.liquidGlass);
+      expect(DesignStyle.parse('spatialui'), DesignStyle.spatialUi);
+      expect(DesignStyle.parse('spatial_ui'), DesignStyle.spatialUi);
+    });
+
+    test('stores canonical ids', () {
+      expect(DesignStyle.minimalism.id, 'minimalism');
+      expect(DesignStyle.liquidGlass.id, 'liquid_glass');
+      expect(DesignStyle.spatialUi.id, 'spatial_ui');
     });
 
     test('throws on unknown', () {
-      expect(() => DesignPreset.parse('xyz'), throwsA(isA<FormatException>()));
+      expect(() => DesignStyle.parse('xyz'), throwsA(isA<FormatException>()));
+    });
+
+    test('legacy DesignPreset typedef still works', () {
+      expect(DesignPreset.parse('material'), DesignStyle.material);
+    });
+
+    test('id round-trips for every style', () {
+      for (final style in DesignStyle.values) {
+        expect(DesignStyle.parse(style.id), style);
+      }
     });
   });
 

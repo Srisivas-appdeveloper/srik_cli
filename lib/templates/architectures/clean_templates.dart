@@ -6,7 +6,7 @@ import 'package:srik_cli/utils/string_utils.dart';
 /// Design files live in lib/core/constants/ (written separately).
 class CleanTemplates {
   /// Folder (relative to lib/) where design system files are placed.
-  static const String designDir = 'core/constants';
+  static const String designDir = 'core/design';
 
   /// Folder (relative to lib/) where flavor config is placed.
   static const String configDir = 'core/config';
@@ -31,7 +31,7 @@ class CleanTemplates {
       'lib/app.dart': Snippets.appWidget(
         name: name,
         title: title,
-        themeImport: 'core/constants/app_theme.dart',
+        themeImport: 'core/design/themes/app_theme.dart',
         routerImport: 'core/router/app_router.dart',
         configImport: configImport,
       ),

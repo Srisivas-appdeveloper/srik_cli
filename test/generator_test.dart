@@ -59,8 +59,10 @@ void main() {
     test('Clean app.dart imports package paths', () {
       final files = CleanTemplates.files(_config(AppArchitecture.clean));
       final app = files['lib/app.dart']!;
-      expect(app.contains('package:test_app/core/constants/app_theme.dart'),
-          isTrue);
+      expect(
+        app.contains('package:test_app/core/design/themes/app_theme.dart'),
+        isTrue,
+      );
     });
 
     test('MVVM view imports package paths', () {
@@ -71,17 +73,28 @@ void main() {
   });
 
   group('DesignTemplates', () {
-    test('produces 6 files without gradient', () {
+    test('produces required token, theme, and component files', () {
       final files = DesignTemplates.allFiles(_config(AppArchitecture.clean));
-      expect(files.length, 6);
-      expect(files.containsKey('app_gradients.dart'), isFalse);
+      expect(files.containsKey('tokens/app_colors.dart'), isTrue);
+      expect(files.containsKey('tokens/app_shadows.dart'), isTrue);
+      expect(files.containsKey('tokens/app_blur.dart'), isTrue);
+      expect(files.containsKey('components/app_surface.dart'), isTrue);
+      expect(files.containsKey('components/app_button.dart'), isTrue);
+      expect(files.containsKey('design_system.dart'), isTrue);
+      expect(files.containsKey('tokens/app_gradients.dart'), isTrue);
     });
 
-    test('produces 7 files with gradient', () {
-      final files = DesignTemplates.allFiles(
-          _config(AppArchitecture.clean, gradient: true));
-      expect(files.length, 7);
-      expect(files.containsKey('app_gradients.dart'), isTrue);
+    test('legacy shims omit app_gradients without the flag', () {
+      final shims = DesignTemplates.legacyShims(_config(AppArchitecture.clean));
+      expect(shims.containsKey('app_gradients.dart'), isFalse);
+      expect(shims.containsKey('app_theme.dart'), isTrue);
+    });
+
+    test('legacy shims include app_gradients with the flag', () {
+      final shims = DesignTemplates.legacyShims(
+        _config(AppArchitecture.clean, gradient: true),
+      );
+      expect(shims.containsKey('app_gradients.dart'), isTrue);
     });
 
     test('colors file embeds the brand color literal', () {

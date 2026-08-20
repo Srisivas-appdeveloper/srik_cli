@@ -64,31 +64,91 @@ enum AppArchitecture {
   }
 }
 
-/// Design system presets — each defines a base color palette.
-enum DesignPreset {
+/// Canonical generated visual styles.
+///
+/// [DesignPreset] is a compatibility typedef for this enum.
+enum DesignStyle {
   material,
   vibrant,
-  minimal;
+  minimalism,
+  neomorphism,
+  skeuomorphism,
+  glassmorphism,
+  claymorphism,
+  maximalism,
+  brutalism,
+  liquidGlass,
+  spatialUi;
 
-  /// Parse a user-supplied value. Throws [FormatException] on unknown input.
-  static DesignPreset parse(String value) {
-    switch (value.toLowerCase().trim()) {
-      case 'vibrant':
-        return DesignPreset.vibrant;
-      case 'minimal':
-        return DesignPreset.minimal;
+  /// Values accepted by `--design` (canonical ids plus aliases).
+  static const List<String> cliValues = [
+    'material',
+    'vibrant',
+    'minimalism',
+    'minimal',
+    'neomorphism',
+    'neoorphism',
+    'neuomorphism',
+    'skeuomorphism',
+    'glassmorphism',
+    'claymorphism',
+    'maximalism',
+    'brutalism',
+    'liquid_glass',
+    'liquidglass',
+    'liquid-glass',
+    'spatial_ui',
+    'spatialui',
+    'spatial-ui',
+  ];
+
+  /// Parse a user-supplied value. Aliases are normalized.
+  /// Throws [FormatException] on unknown input.
+  static DesignStyle parse(String value) {
+    final compact = value
+        .toLowerCase()
+        .trim()
+        .replaceAll(RegExp(r'[\s-]'), '_')
+        .replaceAll('_', '');
+    switch (compact) {
       case 'material':
-        return DesignPreset.material;
+        return DesignStyle.material;
+      case 'vibrant':
+        return DesignStyle.vibrant;
+      case 'minimal':
+      case 'minimalism':
+        return DesignStyle.minimalism;
+      case 'neomorphism':
+      case 'neoorphism':
+      case 'neuomorphism':
+        return DesignStyle.neomorphism;
+      case 'skeuomorphism':
+        return DesignStyle.skeuomorphism;
+      case 'glassmorphism':
+        return DesignStyle.glassmorphism;
+      case 'claymorphism':
+        return DesignStyle.claymorphism;
+      case 'maximalism':
+        return DesignStyle.maximalism;
+      case 'brutalism':
+        return DesignStyle.brutalism;
+      case 'liquidglass':
+        return DesignStyle.liquidGlass;
+      case 'spatialui':
+        return DesignStyle.spatialUi;
       default:
         throw FormatException(
-          'Unknown design preset "$value". '
-          'Valid: material, vibrant, minimal.',
+          'Unknown design style "$value". '
+          'Valid: material, vibrant, minimalism, neomorphism, '
+          'skeuomorphism, glassmorphism, claymorphism, maximalism, '
+          'brutalism, liquid_glass, spatial_ui. '
+          'Aliases: minimal, liquidglass, spatialui, neoorphism.',
         );
     }
   }
 
   /// Tries to parse but returns null on unknown values.
-  static DesignPreset? tryParse(String value) {
+  static DesignStyle? tryParse(String value) {
     try {
       return parse(value);
     } on FormatException {
@@ -96,28 +156,103 @@ enum DesignPreset {
     }
   }
 
+  /// Canonical id persisted in srik.yaml and generated code.
   String get id {
     switch (this) {
-      case DesignPreset.material:
+      case DesignStyle.material:
         return 'material';
-      case DesignPreset.vibrant:
+      case DesignStyle.vibrant:
         return 'vibrant';
-      case DesignPreset.minimal:
-        return 'minimal';
+      case DesignStyle.minimalism:
+        return 'minimalism';
+      case DesignStyle.neomorphism:
+        return 'neomorphism';
+      case DesignStyle.skeuomorphism:
+        return 'skeuomorphism';
+      case DesignStyle.glassmorphism:
+        return 'glassmorphism';
+      case DesignStyle.claymorphism:
+        return 'claymorphism';
+      case DesignStyle.maximalism:
+        return 'maximalism';
+      case DesignStyle.brutalism:
+        return 'brutalism';
+      case DesignStyle.liquidGlass:
+        return 'liquid_glass';
+      case DesignStyle.spatialUi:
+        return 'spatial_ui';
+    }
+  }
+
+  /// Generated Dart enum member name (`AppDesignStyle.liquidGlass`).
+  String get dartName {
+    switch (this) {
+      case DesignStyle.liquidGlass:
+        return 'liquidGlass';
+      case DesignStyle.spatialUi:
+        return 'spatialUi';
+      default:
+        return id.replaceAll('_', '');
     }
   }
 
   String get label {
     switch (this) {
-      case DesignPreset.material:
-        return 'Material (Google defaults)';
-      case DesignPreset.vibrant:
-        return 'Vibrant (saturated, startup style)';
-      case DesignPreset.minimal:
-        return 'Minimal (low contrast, neutral)';
+      case DesignStyle.material:
+        return 'Material';
+      case DesignStyle.vibrant:
+        return 'Vibrant';
+      case DesignStyle.minimalism:
+        return 'Minimalism';
+      case DesignStyle.neomorphism:
+        return 'Neomorphism';
+      case DesignStyle.skeuomorphism:
+        return 'Skeuomorphism';
+      case DesignStyle.glassmorphism:
+        return 'Glassmorphism';
+      case DesignStyle.claymorphism:
+        return 'Claymorphism';
+      case DesignStyle.maximalism:
+        return 'Maximalism';
+      case DesignStyle.brutalism:
+        return 'Brutalism';
+      case DesignStyle.liquidGlass:
+        return 'Liquid Glass';
+      case DesignStyle.spatialUi:
+        return 'Spatial UI';
+    }
+  }
+
+  String get description {
+    switch (this) {
+      case DesignStyle.material:
+        return 'Modern Material 3 appearance with standard Flutter Material behavior.';
+      case DesignStyle.vibrant:
+        return 'Bright startup-style visual language with stronger color and gradients.';
+      case DesignStyle.minimalism:
+        return 'Clean, restrained, typography-focused interface with generous whitespace.';
+      case DesignStyle.neomorphism:
+        return 'Soft extruded and inset surfaces created with paired light and dark shadows.';
+      case DesignStyle.skeuomorphism:
+        return 'Physical-object cues using depth, highlights, and tactile controls.';
+      case DesignStyle.glassmorphism:
+        return 'Translucent layered surfaces using blur, tint, borders, and highlights.';
+      case DesignStyle.claymorphism:
+        return 'Soft inflated shapes, large radii, and playful tactile depth.';
+      case DesignStyle.maximalism:
+        return 'Expressive typography, bold colors, decorative layering, and energetic hierarchy.';
+      case DesignStyle.brutalism:
+        return 'Hard borders, strong contrast, blocky type, and offset shadows.';
+      case DesignStyle.liquidGlass:
+        return 'Fluid translucent surfaces with layered blur, luminous edges, and smooth motion.';
+      case DesignStyle.spatialUi:
+        return 'Depth-oriented floating surfaces with layered hierarchy and spatial transitions.';
     }
   }
 }
+
+/// Legacy name for [DesignStyle]. Existing call sites keep compiling.
+typedef DesignPreset = DesignStyle;
 
 /// Spacing scale density.
 enum SpacingScale {

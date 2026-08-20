@@ -5,7 +5,7 @@ import 'package:srik_cli/utils/string_utils.dart';
 /// Simple template set — minimal structure, no architecture layering.
 /// Design files live in lib/theme/.
 class SimpleTemplates {
-  static const String designDir = 'theme';
+  static const String designDir = 'design';
 
   /// Folder (relative to lib/) where flavor config is placed.
   static const String configDir = 'config';
@@ -36,7 +36,7 @@ final welcomeProvider = FutureProvider<WelcomeModel>((ref) async {
       'lib/app.dart': Snippets.appWidget(
         name: name,
         title: title,
-        themeImport: 'theme/app_theme.dart',
+        themeImport: 'design/themes/app_theme.dart',
         routerImport: 'router/app_router.dart',
         configImport: configImport,
       ),

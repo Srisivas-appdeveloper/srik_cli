@@ -38,11 +38,12 @@ class ${pascal}Screen extends ConsumerWidget {
   }
 
   static String provider(String screen) {
+    final camel = StringUtils.toCamelCase(screen);
     return '''
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// State for the $screen screen.
-final ${screen}StateProvider = StateProvider<int>((ref) => 0);
+final ${camel}StateProvider = StateProvider<int>((ref) => 0);
 ''';
   }
 }

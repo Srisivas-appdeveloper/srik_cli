@@ -86,6 +86,7 @@ void main() {
 
       // The block exists.
       expect(out, contains('flavorDimensions += "flavor"'));
+      expect(out, contains('resValues = true'));
       expect(out, contains('productFlavors {'));
       expect(out, contains('create("dev") {'));
       expect(out, contains('applicationIdSuffix = ".dev"'));
@@ -123,6 +124,7 @@ void main() {
         flavors: _flavors(),
       );
       expect(out, contains('flavorDimensions "flavor"'));
+      expect(out, contains('resValues true'));
       expect(out, contains('dev {'));
       expect(out, contains('applicationIdSuffix ".dev"'));
       expect(out, contains('resValue "string", "app_name", "Demo Dev"'));

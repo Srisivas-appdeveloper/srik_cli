@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.4.0
+
+Generated design-system engine. `--design` now selects among 11 visual styles
+that drive tokens, theme extensions, and reusable components — not only a
+color palette. Existing Material / Vibrant / Minimal projects and the
+`minimal` alias remain supported.
+
+### New
+
+- Design styles: `material`, `vibrant`, `minimalism`, `neomorphism`,
+  `skeuomorphism`, `glassmorphism`, `claymorphism`, `maximalism`,
+  `brutalism`, `liquid_glass`, `spatial_ui`.
+- Aliases: `minimal` → `minimalism`, `liquidglass` / `liquid-glass`,
+  `spatialui` / `spatial-ui`, `neoorphism` / `neuomorphism`.
+- Nested design system (`tokens/`, `themes/`, `components/`, `styles/`)
+  under `lib/core/design`, `lib/shared/design`, or `lib/design`.
+- Reusable widgets: `AppSurface`, `AppCard`, `AppButton`, `AppIconButton`,
+  `AppTextField`, `AppChip`, `AppBadge`, `AppDialog`, `AppBottomSheet`,
+  `AppNavigationBar`.
+- Theme extensions for surface, shadow, blur, border, motion, and components.
+- Light and dark `ThemeData` with `themeMode: ThemeMode.system`.
+- Brand-aware, style-specific color derivation.
+- `srik.yaml` `schema_version: 2` and a `design:` block. v0.3 files still
+  load; `srik add` keeps using the old token folders for those projects.
+
+### Compatibility
+
+- `--design=material|vibrant|minimal` continues to work.
+- Legacy token shims are written to `core/constants`, `shared/theme`, or
+  `theme` so older imports keep resolving.
+- `--gradient` still controls the legacy `app_gradients.dart` shim. Gradient
+  token files are always generated in the new design system.
+
 ## 0.3.1
 
 Pub.dev score fixes — no functional changes.

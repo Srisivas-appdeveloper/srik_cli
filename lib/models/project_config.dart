@@ -9,7 +9,9 @@ class ProjectConfig {
   final String outputDirectory;
 
   final AppArchitecture architecture;
-  final DesignPreset designPreset;
+
+  /// Selected visual style. Named [designPreset] for backward compatibility.
+  final DesignStyle designPreset;
   final bool useGradient;
   final SpacingScale spacingScale;
   final String brandColor; // hex like #6200EE
@@ -31,6 +33,9 @@ class ProjectConfig {
     required this.brandColor,
     this.flavors = const [],
   });
+
+  /// Canonical name for [designPreset].
+  DesignStyle get designStyle => designPreset;
 
   /// Whether this project should be generated with build flavors.
   bool get hasFlavors => flavors.isNotEmpty;

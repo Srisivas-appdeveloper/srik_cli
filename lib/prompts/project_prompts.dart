@@ -57,19 +57,19 @@ class ProjectPrompts {
       architecture = AppArchitecture.clean;
     }
 
-    // Design preset
-    final DesignPreset designPreset;
+    // Design style
+    final DesignStyle designPreset;
     if (providedDesign != null) {
-      designPreset = DesignPreset.parse(providedDesign);
+      designPreset = DesignStyle.parse(providedDesign);
     } else if (interactive) {
-      final options = DesignPreset.values;
+      final options = DesignStyle.values;
       final index = Select(
-        prompt: 'Design preset',
+        prompt: 'Choose a design style',
         options: options.map((d) => d.label).toList(),
       ).interact();
       designPreset = options[index];
     } else {
-      designPreset = DesignPreset.material;
+      designPreset = DesignStyle.material;
     }
 
     // Gradient

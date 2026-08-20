@@ -190,6 +190,10 @@ class GradleEditor {
   static String _ktsBlock(List<FlavorGradle> flavors) {
     final buf = StringBuffer()
       ..writeln('    // Build flavors (added by srik_cli).')
+      ..writeln('    // AGP 8+/9 disables resValues unless explicitly enabled.')
+      ..writeln('    buildFeatures {')
+      ..writeln('        resValues = true')
+      ..writeln('    }')
       ..writeln('    flavorDimensions += "$_dimension"')
       ..writeln()
       ..writeln('    productFlavors {');
@@ -214,6 +218,10 @@ class GradleEditor {
   static String _groovyBlock(List<FlavorGradle> flavors) {
     final buf = StringBuffer()
       ..writeln('    // Build flavors (added by srik_cli).')
+      ..writeln('    // AGP 8+/9 disables resValues unless explicitly enabled.')
+      ..writeln('    buildFeatures {')
+      ..writeln('        resValues true')
+      ..writeln('    }')
       ..writeln('    flavorDimensions "$_dimension"')
       ..writeln()
       ..writeln('    productFlavors {');

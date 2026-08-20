@@ -5,7 +5,7 @@ import 'package:srik_cli/utils/string_utils.dart';
 /// MVVM template set.
 /// Design files live in lib/core/constants/.
 class MvvmTemplates {
-  static const String designDir = 'core/constants';
+  static const String designDir = 'core/design';
 
   /// Folder (relative to lib/) where flavor config is placed.
   static const String configDir = 'core/config';
@@ -26,7 +26,7 @@ class MvvmTemplates {
       'lib/app.dart': Snippets.appWidget(
         name: name,
         title: title,
-        themeImport: 'core/constants/app_theme.dart',
+        themeImport: 'core/design/themes/app_theme.dart',
         routerImport: 'core/router/app_router.dart',
         configImport: configImport,
       ),
